@@ -1,9 +1,19 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
+from app.core.database import create_all_tables
 
-app = FastAPI(title="Food Store API")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_all_tables()
+    yield
+
+
+app = FastAPI(title="Food Store API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
