@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Optional
 
 from sqlmodel import Field, Relationship, SQLModel
@@ -15,6 +15,6 @@ class Usuario(SQLModel, table=True):
     hashed_password: str
     role: str = Field(default="user")
     disabled: bool = Field(default=False)
-    created_at: datetime = Field(default_factory=datetime.now)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     pedidos: list["Pedido"] = Relationship(back_populates="usuario")

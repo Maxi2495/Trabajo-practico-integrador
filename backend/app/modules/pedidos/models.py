@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Optional
 
 from sqlmodel import Field, Relationship, SQLModel
@@ -16,8 +16,8 @@ class Pedido(SQLModel, table=True):
     direccion_entrega: str
     notas: Optional[str] = None
     total: float = Field(default=0)
-    created_at: datetime = Field(default_factory=datetime.now)
-    updated_at: datetime = Field(default_factory=datetime.now)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     usuario: Optional["Usuario"] = Relationship(back_populates="pedidos")
     items: list["DetallePedido"] = Relationship(back_populates="pedido")

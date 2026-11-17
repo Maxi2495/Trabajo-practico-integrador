@@ -16,4 +16,4 @@ def create_all_tables() -> None:
 
 
 def session_factory() -> Session:
-    return Session(engine)
+    return Session(engine, expire_on_commit=False)
