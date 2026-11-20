@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '../../../shared/api/axiosInstance';
-import type { PedidoRead, PedidosPaginados } from '../types';
+import type { PedidoRead, PedidosPaginados, ResumenPedidos } from '../types';
 
 interface ItemPedidoCreate {
   producto_id: number;
@@ -37,6 +37,16 @@ export function useCancelarPedido() {
   return useMutation({
     mutationFn: async (pedidoId: number) => {
       const response = await axiosInstance.patch<PedidoRead>(`/pedidos/${pedidoId}/cancelar`);
+      return response.data;
+    },
+  });
+}
+
+export function useResumenPedidos() {
+  return useQuery({
+    queryKey: ['pedidos', 'resumen'],
+    queryFn: async () => {
+      const response = await axiosInstance.get<ResumenPedidos>('/pedidos/resumen');
       return response.data;
     },
   });

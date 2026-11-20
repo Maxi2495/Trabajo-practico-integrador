@@ -1,11 +1,15 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
+import { MainLayout } from '../shared/layout/MainLayout';
 import { LoginPage } from '../features/auth/pages/LoginPage';
 import { RegisterPage } from '../features/auth/pages/RegisterPage';
 import { CatalogoPage } from '../features/productos/pages/CatalogoPage';
 import { CarritoPage } from '../features/pedidos/pages/CarritoPage';
 import { CheckoutPage } from '../features/pedidos/pages/CheckoutPage';
 import { MisPedidosPage } from '../features/pedidos/pages/MisPedidosPage';
+import { AdminResumenPage } from '../features/pedidos/pages/AdminResumenPage';
+import { AdminCategoriasPage } from '../features/categorias/pages/AdminCategoriasPage';
+import { AdminProductosPage } from '../features/productos/pages/AdminProductosPage';
 
 export const AppRouter = () => {
   return (
@@ -15,17 +19,25 @@ export const AppRouter = () => {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/unauthorized" element={<div className="p-8 text-center text-red-500 font-bold">Acceso no autorizado</div>} />
 
-        {/* Rutas generales para usuarios autenticados */}
+        {/* Rutas envueltas en el Layout Principal */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<CatalogoPage />} />
-          <Route path="/carrito" element={<CarritoPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/mis-pedidos" element={<MisPedidosPage />} />
-        </Route>
+          <Route element={<MainLayout />}>
+            {/* Rutas de Cliente / Generales */}
+            <Route path="/" element={<CatalogoPage />} />
+            <Route path="/carrito" element={<CarritoPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/mis-pedidos" element={<MisPedidosPage />} />
 
-        {/* Rutas exclusivas para admin */}
-        <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-          <Route path="/admin/resumen" element={<div className="p-8 text-center font-bold">Panel Admin (Próximamente)</div>} />
+            {/* Rutas de Admin (placeholder inicial) */}
+            <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+              <Route path="/admin/resumen" element={<AdminResumenPage />} />
+              <Route path="/admin/categorias" element={<AdminCategoriasPage />} />
+              <Route path="/admin/productos" element={<AdminProductosPage />} />
+              <Route path="/admin/pedidos" element={<div className="p-8 text-center font-bold text-2xl">Gestión de Pedidos (Próximamente)</div>} />
+              <Route path="/admin/usuarios" element={<div className="p-8 text-center font-bold text-2xl">Gestión de Usuarios (Próximamente)</div>} />
+              
+            </Route>
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
