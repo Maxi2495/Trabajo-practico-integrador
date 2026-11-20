@@ -10,6 +10,8 @@ import { MisPedidosPage } from '../features/pedidos/pages/MisPedidosPage';
 import { AdminResumenPage } from '../features/pedidos/pages/AdminResumenPage';
 import { AdminCategoriasPage } from '../features/categorias/pages/AdminCategoriasPage';
 import { AdminProductosPage } from '../features/productos/pages/AdminProductosPage';
+import { AdminPedidosPage } from '../features/pedidos/pages/AdminPedidosPage';
+import { AdminUsuariosPage } from '../features/usuarios/pages/AdminUsuariosPage';
 
 export const AppRouter = () => {
   return (
@@ -33,8 +35,8 @@ export const AppRouter = () => {
               <Route path="/admin/resumen" element={<AdminResumenPage />} />
               <Route path="/admin/categorias" element={<AdminCategoriasPage />} />
               <Route path="/admin/productos" element={<AdminProductosPage />} />
-              <Route path="/admin/pedidos" element={<div className="p-8 text-center font-bold text-2xl">Gestión de Pedidos (Próximamente)</div>} />
-              <Route path="/admin/usuarios" element={<div className="p-8 text-center font-bold text-2xl">Gestión de Usuarios (Próximamente)</div>} />
+              <Route path="/admin/pedidos" element={<AdminPedidosPage />} />
+              <Route path="/admin/usuarios" element={<AdminUsuariosPage />} />
               
             </Route>
           </Route>

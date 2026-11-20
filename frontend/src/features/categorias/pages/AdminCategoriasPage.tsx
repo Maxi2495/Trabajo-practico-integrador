@@ -19,6 +19,7 @@ import { handleApiError } from '../../../shared/api/handleApiError';
 const columnHelper = createColumnHelper<CategoriaRead>();
 
 export const AdminCategoriasPage = () => {
+  "use no memo";
   const { data: categorias = [], isLoading, isError } = useCategorias();
   const crearMutation = useCrearCategoria();
   const actualizarMutation = useActualizarCategoria();
@@ -127,7 +128,8 @@ export const AdminCategoriasPage = () => {
     ],
     []
   );
-
+  
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: categorias,
     columns,
