@@ -44,7 +44,7 @@ export const Navbar = () => {
               ) : (
                 <>
                   <Link to="/" className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Catálogo</Link>
-                  <Link to="/mis-pedidos" className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Mis Pedidos</Link>
+                  {user && (<Link to="/mis-pedidos" className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Mis Pedidos</Link>)}
                 </>
               )}
             </div>
@@ -62,16 +62,24 @@ export const Navbar = () => {
               </Link>
             )}
 
-            <div className="text-sm font-medium text-gray-700">
-              Hola, <span className="font-bold">{user?.full_name || user?.username}</span>
-            </div>
-
-            <button
-              onClick={handleLogout}
-              className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 shadow-sm"
-            >
-              Cerrar sesión
-            </button>
+                        {user ? (
+              <>
+                <div className="text-sm font-medium text-gray-700">
+                  Hola, <span className="font-bold">{user.full_name || user.username}</span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 shadow-sm"
+                >
+                  Cerrar sesión
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">Ingresar</Link>
+                <Link to="/register" className="rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700">Registrarse</Link>
+              </>
+            )}
           </div>
         </div>
       </div>

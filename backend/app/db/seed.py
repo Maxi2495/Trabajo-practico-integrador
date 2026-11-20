@@ -1,5 +1,5 @@
 from sqlmodel import Session, select
-from app.core.database import engine
+from app.core.database import engine, create_all_tables
 from app.core.security import hash_password
 
 from app.modules.usuarios.models import Usuario
@@ -9,6 +9,7 @@ from app.modules.pedidos.models import Pedido, DetallePedido  # <-- Agregado
 
 
 def ejecutar_seed():
+    create_all_tables()
     with Session(engine) as session:
         print("🌱 Iniciando seed de la base de datos...")
 

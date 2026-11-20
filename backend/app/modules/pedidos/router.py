@@ -16,6 +16,7 @@ from app.modules.pedidos.service import (
     ProductoRepetido,
     StockInsuficiente,
     TransicionInvalida,
+    ProductoNoEncontrado
 )
 from app.modules.pedidos.unit_of_work import PedidoUnitOfWork
 from app.modules.usuarios.models import Usuario
@@ -35,14 +36,14 @@ def crear_pedido(
 ):
     try:
         return service.crear_pedido(usuario.id, data)
-    except (StockInsuficiente, ProductoNoDisponible, ProductoRepetido) as e:
-        if isinstance(e, StockInsuficiente):
-            detail = "Stock insuficiente"
-        elif isinstance(e, ProductoNoDisponible):
-            detail = "Producto no disponible"
-        else:
-            detail = "Producto repetido en el pedido"
-        raise HTTPException(status_code=400, detail=detail)
+    except ProductoNoEncontrado:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+    except StockInsuficiente:
+        raise HTTPException(status_code=400, detail="Stock insuficiente")
+    except ProductoNoDisponible:
+        raise HTTPException(status_code=400, detail="Producto no disponible")
+    except ProductoRepetido:
+        raise HTTPException(status_code=400, detail="Producto repetido en el pedido")
 
 
 @router.get("", response_model=PedidosPaginados)
@@ -56,7 +57,7 @@ def listar_pedidos(
     total, items = service.listar_pedidos(
         usuario.id, usuario.role, skip=skip, limit=limit, estado=estado
     )
-    return PedidosPaginados(total=total, items=[PedidoRead.model_validate(i) for i in items])
+    return PedidosPaginados(total=total, items=items)
 
 
 @router.get("/resumen", response_model=ResumenPedidos, dependencies=[Depends(require_role(["admin"]))])

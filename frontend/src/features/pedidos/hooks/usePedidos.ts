@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '../../../shared/api/axiosInstance';
 import type { PedidoRead, PedidosPaginados, ResumenPedidos } from '../types';
 
@@ -15,10 +15,15 @@ interface PedidoCreateData {
 }
 
 export function useCrearPedido() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: PedidoCreateData) => {
       const response = await axiosInstance.post<PedidoRead>('/pedidos', data);
       return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pedidos'] });
+      queryClient.invalidateQueries({ queryKey: ['productos'] });
     },
   });
 }
@@ -34,10 +39,15 @@ export function useMisPedidos() {
 }
 
 export function useCancelarPedido() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (pedidoId: number) => {
       const response = await axiosInstance.patch<PedidoRead>(`/pedidos/${pedidoId}/cancelar`);
       return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pedidos'] });
+      queryClient.invalidateQueries({ queryKey: ['productos'] });
     },
   });
 }

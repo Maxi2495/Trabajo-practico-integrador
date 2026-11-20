@@ -14,30 +14,27 @@ import { AdminPedidosPage } from '../features/pedidos/pages/AdminPedidosPage';
 import { AdminUsuariosPage } from '../features/usuarios/pages/AdminUsuariosPage';
 
 export const AppRouter = () => {
-  return (
+    return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/unauthorized" element={<div className="p-8 text-center text-red-500 font-bold">Acceso no autorizado</div>} />
 
-        {/* Rutas envueltas en el Layout Principal */}
-        <Route element={<ProtectedRoute />}>
-          <Route element={<MainLayout />}>
-            {/* Rutas de Cliente / Generales */}
-            <Route path="/" element={<CatalogoPage />} />
-            <Route path="/carrito" element={<CarritoPage />} />
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<CatalogoPage />} />
+          <Route path="/carrito" element={<CarritoPage />} />
+
+          <Route element={<ProtectedRoute />}>
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/mis-pedidos" element={<MisPedidosPage />} />
 
-            {/* Rutas de Admin (placeholder inicial) */}
             <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
               <Route path="/admin/resumen" element={<AdminResumenPage />} />
               <Route path="/admin/categorias" element={<AdminCategoriasPage />} />
               <Route path="/admin/productos" element={<AdminProductosPage />} />
               <Route path="/admin/pedidos" element={<AdminPedidosPage />} />
               <Route path="/admin/usuarios" element={<AdminUsuariosPage />} />
-              
             </Route>
           </Route>
         </Route>

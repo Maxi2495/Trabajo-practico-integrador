@@ -1,10 +1,8 @@
 from datetime import datetime, timezone
-from typing import Optional, Sequence
-from fastapi import HTTPException
+from typing import Optional
 from app.modules.pedidos.models import DetallePedido, Pedido
-from app.modules.pedidos.schemas import PedidoCreate, PedidoRead
+from app.modules.pedidos.schemas import PedidoCreate, PedidoRead, ResumenPedidos
 from app.modules.pedidos.unit_of_work import PedidoUnitOfWork
-from sqlmodel import func, select
 
 
 # Excepciones de dominio exigidas por la cátedra
@@ -23,6 +21,8 @@ class StockInsuficiente(Exception):
 class ProductoNoDisponible(Exception):
     pass
 
+class ProductoNoEncontrado(Exception):
+    pass
 
 class ProductoRepetido(Exception):
     pass
@@ -67,7 +67,7 @@ class PedidoService:
             for item in data.items:
                 producto = uow.productos.get_by_id(item.producto_id)
                 if not producto or not producto.activo:
-                    raise HTTPException(status_code=404, detail="Producto no encontrado")
+                    raise ProductoNoEncontrado()
 
                 if not producto.disponible:
                     raise ProductoNoDisponible()
@@ -102,23 +102,15 @@ class PedidoService:
 
     def listar_pedidos(
         self, usuario_id: int, role: str, skip: int = 0, limit: int = 20, estado: Optional[str] = None
-    ) -> tuple[int, Sequence[Pedido]]:
+    ) -> tuple[int, list[PedidoRead]]:
         with self.uow as uow:
             if role == "admin":
                 items = uow.pedidos.list_all(skip=skip, limit=limit, estado=estado)
                 total = uow.pedidos.count_all(estado=estado)
             else:
                 items = uow.pedidos.list_by_usuario(usuario_id, skip=skip, limit=limit, estado=estado)
-                statement = select(func.count()).select_from(Pedido).where(Pedido.usuario_id == usuario_id)
-                if estado:
-                    statement = statement.where(Pedido.estado == estado)
-                total = uow.session.exec(statement).one()
-            
-            # Forzar la carga de los items dentro de la sesión activa para evitar DetachedInstanceError
-            for item in items:
-                _ = item.items
-
-            return total, items
+                total = uow.pedidos.count_all(estado=estado, usuario_id=usuario_id)
+            return total, [PedidoRead.model_validate(p) for p in items]
 
     def obtener_pedido(self, pedido_id: int, usuario_id: int, role: str) -> PedidoRead:
         with self.uow as uow:
@@ -183,29 +175,14 @@ class PedidoService:
 
             return PedidoRead.model_validate(pedido)
 
-    def obtener_resumen(self):
+    def obtener_resumen(self) -> ResumenPedidos:
         with self.uow as uow:
-            pendientes = uow.pedidos.count_by_estado("PENDIENTE")
-            en_preparacion = uow.pedidos.count_by_estado("EN_PREPARACION")
-            entregados = uow.pedidos.count_by_estado("ENTREGADO")
-            cancelados = uow.pedidos.count_by_estado("CANCELADO")
-
-            # Pedidos hoy (UTC)
             hoy = datetime.now(timezone.utc).date()
-            statement_hoy = select(func.count()).select_from(Pedido).where(
-                func.date(Pedido.created_at) == hoy
+            return ResumenPedidos(
+                pendientes=uow.pedidos.count_by_estado("PENDIENTE"),
+                en_preparacion=uow.pedidos.count_by_estado("EN_PREPARACION"),
+                entregados=uow.pedidos.count_by_estado("ENTREGADO"),
+                cancelados=uow.pedidos.count_by_estado("CANCELADO"),
+                pedidos_hoy=uow.pedidos.count_hoy(hoy),
+                ingresos_entregados=uow.pedidos.sum_total_by_estado("ENTREGADO"),
             )
-            pedidos_hoy = uow.session.exec(statement_hoy).one()
-
-            # Ingresos entregados (suma de totales de pedidos ENTREGADO)
-            statement_ingresos = select(func.sum(Pedido.total)).where(Pedido.estado == "ENTREGADO")
-            ingresos_entregados = uow.session.exec(statement_ingresos).one() or 0.0
-
-            return {
-                "pendientes": pendientes,
-                "en_preparacion": en_preparacion,
-                "entregados": entregados,
-                "cancelados": cancelados,
-                "pedidos_hoy": pedidos_hoy,
-                "ingresos_entregados": float(ingresos_entregados),
-            }

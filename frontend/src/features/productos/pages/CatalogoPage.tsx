@@ -1,33 +1,49 @@
 import { useState } from 'react';
 import { useProductos } from '../hooks/useProductos';
 import { ProductoCard } from '../components/ProductoCard';
+import { useCategorias } from '../../categorias/hooks/useCategorias';
 
 export const CatalogoPage = () => {
   const [page, setPage] = useState(0);
   const limit = 8;
   const [search, setSearch] = useState('');
+  const [categoriaId, setCategoriaId] = useState<number | undefined>(undefined);
+  const { data: categorias = [] } = useCategorias();
 
   const { data, isLoading, isError } = useProductos({
     skip: page * limit,
     limit,
     search: search || undefined,
+    categoria_id: categoriaId,
   });
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-3xl font-extrabold text-gray-900">Catálogo de Productos</h1>
-        <input
-          type="text"
-          placeholder="Buscar productos..."
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(0); // Reiniciar a la primera página al buscar
-          }}
-          className="rounded-md border border-gray-300 px-4 py-2 shadow-sm focus:border-indigo-500 focus:outline-none sm:w-80"
-        />
-      </div>
+              <div className="flex flex-col gap-3 sm:flex-row">
+          <select
+            value={categoriaId ?? ''}
+            onChange={(e) => {
+              setCategoriaId(e.target.value ? Number(e.target.value) : undefined);
+              setPage(0);
+            }}
+            className="rounded-md border border-gray-300 bg-white px-3 py-2"
+          >
+            <option value="">Todas las categorías</option>
+            {categorias.map((c) => (
+              <option key={c.id} value={c.id}>{c.nombre}</option>
+            ))}
+          </select>
+          <input
+            type="text"
+            placeholder="Buscar productos..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(0);
+            }}
+            className="rounded-md border border-gray-300 px-4 py-2 shadow-sm focus:border-indigo-500 focus:outline-none sm:w-80"
+          />
+        </div>
 
       {isLoading && (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

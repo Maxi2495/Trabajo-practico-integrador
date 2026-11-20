@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const setUser = useAuthStore((state) => state.setUser);
+  const login = useAuthStore((state) => state.login);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const loginMutation = useMutation({
@@ -21,7 +21,7 @@ export const LoginPage = () => {
       return user;
     },
     onSuccess: (user) => {
-      setUser(user);
+      login(user);
       if (user.role === 'admin') {
         navigate('/admin/resumen');
       } else {
