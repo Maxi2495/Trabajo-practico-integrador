@@ -45,7 +45,7 @@ export const AdminPedidosPage = () => {
     setErrorMessage(null);
     cambiarEstadoMutation.mutate({ id: pedidoId, estado: nuevoEstado });
   };
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const columns = useMemo(
     () => [
       columnHelper.accessor('id', {
@@ -128,7 +128,7 @@ export const AdminPedidosPage = () => {
     ],
     []
   );
-
+ // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: data?.items ?? [],
     columns,

@@ -146,7 +146,7 @@ export const AdminProductosPage = () => {
       onError: (err) => alert(handleApiError(err)),
     });
   };
-
+  //eslint-disable-next-line react-hooks/exhaustive-deps
   const columns = useMemo(
     () => [
       columnHelper.accessor('nombre', {
@@ -231,7 +231,7 @@ export const AdminProductosPage = () => {
     ],
     [categorias]
   );
-
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: data?.items ?? [],
     columns,

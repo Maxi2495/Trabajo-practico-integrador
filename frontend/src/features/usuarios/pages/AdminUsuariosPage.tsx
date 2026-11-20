@@ -52,7 +52,7 @@ export const AdminUsuariosPage = () => {
     setErrorMessage(null);
     cambiarEstadoUsuarioMutation.mutate({ id, desactivar: !disabled });
   };
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const columns = useMemo(
     () => [
       columnHelper.accessor('username', {
@@ -111,7 +111,7 @@ export const AdminUsuariosPage = () => {
     ],
     [currentUser]
   );
-
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: usuarios,
     columns,

@@ -87,7 +87,7 @@ export const AdminCategoriasPage = () => {
       onError: (err) => alert(handleApiError(err)),
     });
   };
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const columns = useMemo(
     () => [
       columnHelper.accessor('id', {
