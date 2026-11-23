@@ -1,4 +1,4 @@
-# Food Store 🍔
+# Food Store
 
 Trabajo Práctico Integrador de **Programación 4** – Tecnicatura Universitaria en Programación a Distancia (UTN).
 
