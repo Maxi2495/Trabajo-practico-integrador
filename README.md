@@ -8,7 +8,7 @@ Food Store es una aplicación web para un negocio de comidas. Los clientes se re
 |---|---|
 | **Autor** | _Niemiec Maximiliano_ |
 | **Repositorio** | https://github.com/Maxi2495/Trabajo-practico-integrador |
-| **Video de demostración** | _Link_aun_no_listo_ |
+| **Video de demostración** | `https://youtu.be/ZOk7gGSKOD0` |
 
 ---
 
@@ -36,7 +36,7 @@ Se necesitan **dos terminales**: una para el backend y otra para el frontend.
 
 ### 1) Backend
 
-Primero creá una base de datos vacía en PostgreSQL:
+Primero crear una base de datos vacía en PostgreSQL:
 
 ```sql
 CREATE DATABASE foodstore_db_integrador;
@@ -52,9 +52,9 @@ pip install -r requirements.txt
 copy .env.example .env         # Windows
 ```
 
-Abrí el archivo `.env` y completá `DATABASE_URL` con tu usuario y contraseña de PostgreSQL.
+Abrir el archivo `.env` y completar `DATABASE_URL` con usuario y contraseña de PostgreSQL.
 
-Cargá los datos iniciales y levantá la API:
+Cargar los datos iniciales y levantar la API:
 
 ```bash
 python -m app.db.seed
@@ -78,7 +78,7 @@ pnpm build
 pnpm dev
 ```
 
-Abrí http://localhost:5173
+Abrir http://localhost:5173
 
 ---
 
