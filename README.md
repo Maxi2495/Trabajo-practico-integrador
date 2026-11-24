@@ -8,7 +8,7 @@ Food Store es una aplicación web para un negocio de comidas. Los clientes se re
 |---|---|
 | **Autor** | _Niemiec Maximiliano_ |
 | **Repositorio** | https://github.com/Maxi2495/Trabajo-practico-integrador |
-| **Video de demostración** | `https://youtu.be/ZOk7gGSKOD0` |
+| **Video de demostración** | `https://youtu.be/mPPGJl18Zjk` |
 
 ---
 
